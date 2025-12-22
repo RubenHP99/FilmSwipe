@@ -1,0 +1,16 @@
+
+
+@font-face {
+  font-family: 'TextFont';
+  src: url('/Poppins-Regular.ttf');
+}
+
+* {
+  font-family: 'TextFont';
+}
+
+
+:root {
+  --gradient-color-1: #ff69b4;
+  --gradient-color-2: #9370db;
+}

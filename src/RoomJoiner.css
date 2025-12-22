@@ -1,0 +1,142 @@
+/* Reset básico para asegurar que el centrado funcione desde el borde de la pantalla */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(36, 36, 36); /* Quitamos el !important si no es necesario */
+}
+
+.room-joiner-container {
+    display: flex !important;
+    flex-direction: column !important; 
+    justify-content: center !important; /* Centrado vertical */
+    align-items: center !important;    /* Centrado horizontal */
+    min-height: 100vh;                 /* Ocupa toda la pantalla */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Estilos del Logo */
+.app-logo-normal {
+    width: 20vw !important;
+    min-width: 120px; /* Evita que sea minúsculo en móvil */
+    height: auto;
+}
+
+.logoName {
+    margin-top: -20vh;
+    margin-bottom: -10vh;
+}
+
+/* ESTILOS DE LA TARJETA */
+.room-card {
+    border-radius: 16px !important; 
+    width: 100%;
+    max-width: 450px;    /* Ancho máximo elegante para escritorio */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Centrar el contenido interno de la Card de Ant Design */
+.room-card .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio uniforme entre elementos internos */
+}
+
+.room-card h2 {
+    text-align: center;
+    margin-bottom: -2vh;
+}
+
+/* BOTÓN GRADIENTE */
+.gradient-button {
+    color: white !important; 
+    z-index: 1 !important;
+    position: relative !important;
+    border-radius: 24px !important; 
+    border: none !important;
+    height: 55px !important; 
+    font-weight: bold !important;
+    overflow: hidden !important;
+    background: transparent !important; 
+    
+    display: inline-flex !important; /* Cambiado a inline-flex */
+    width: fit-content !important;    /* Se ajusta al texto */
+    align-self: center !important;   /* Centra el botón dentro de la card */
+    
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px;
+    cursor: pointer;
+
+    font-size: x-large;
+}
+
+.gradient-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--gradient-color-1) 0%, var(--gradient-color-2) 100%) !important; 
+    z-index: -1; 
+    border-radius: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.gradient-button:hover {
+    filter: brightness(1.1);
+    color: white !important; /* Mantenemos blanco para que se lea bien con el rosa/morado */
+}
+
+
+
+
+/* 1. Color del borde cuando el radio está seleccionado */
+.ant-radio-checked .ant-radio-inner {
+    border-color: var(--gradient-color-1) !important; /* Color rosa del inicio de tu gradiente */
+    background: linear-gradient(135deg, var(--gradient-color-1) 0%, var(--gradient-color-2) 100%)
+}
+
+/* 2. Color del punto blanco central cuando está seleccionado */
+.ant-radio-inner::after {
+  border-color: white;
+}
+
+/* 3. Color del borde cuando pasas el ratón por encima (hover) */
+.ant-radio-wrapper:hover .ant-radio-inner,
+.ant-radio:hover .ant-radio-inner {
+    border-color: var(--gradient-color-2) !important; /* Color morado */
+}
+
+/* 4. Color de la sombra/halo que sale al hacer click */
+.ant-radio-checked::after {
+    border: 1px solid var(--gradient-color-1) !important;
+}
+
+
+
+
+/* Agranda el componente de Radio completo */
+.ant-radio {
+    transform: scale(1.6) !important; /* Ajusta este valor según necesites (1.5, 2.0...) */
+    margin-right: 12px !important;    /* Añade espacio entre el círculo grande y el texto */
+}
+
+/* Ajusta el margen del contenedor para que no se solapen al crecer */
+.ant-radio-wrapper {
+    margin-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Opcional: Si el punto blanco interno se ve descentrado al escalar, ajustamos: */
+.ant-radio-inner::after {
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    margin-left: -5px;
+}

@@ -1,0 +1,169 @@
+/* Estilos globales y de contenedor */
+body {
+    margin: 0;
+    background-color: #121212; /* Fondo Oscuro */
+    color: white;
+}
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+    box-sizing: border-box;
+}
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #6366f1; /* Índigo */
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Pila de tarjetas (Stack) */
+#card-stack {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Indicador de carga (si se usa) */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+    height: 100%;
+}
+.loading-text {
+    color: #93c5fd; /* Azul claro */
+    margin-top: 16px;
+    font-size: 1.125rem;
+}
+
+/* Estilos de la tarjeta individual */
+.movie-card {
+    position: absolute;
+    width: 90%;
+    max-width: 400px;
+    height: 95%;
+    background: #1f2937; /* Gris Oscuro/Azulado */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* La transición se controla con JS/React para el swipe, pero se mantiene para el snap-back */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    touch-action: none;
+    border: 1px solid #374151;
+}
+.card-image {
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+}
+.card-content {
+    height: 40%;
+    max-height: 40%;
+    padding: 1rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: #121212;
+}
+.card-content h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+.card-content p {
+    color: #a0a0a0;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+.card-content .genre {
+    font-size: 0.875rem;
+    color: #93c5fd;
+}
+
+/* Etiquetas LIKE/NOPE */
+.label {
+    position: absolute;
+    top: 10%;
+    font-size: 40px;
+    font-weight: 700;
+    padding: 10px 15px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.1s;
+    pointer-events: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+.label.nope {
+    left: 20px;
+    color: #ef4444; /* Rojo */
+    border: 4px solid #ef4444;
+    transform: rotate(-20deg);
+}
+.label.like {
+    right: 20px;
+    color: #10b981; /* Verde esmeralda */
+    border: 4px solid #10b981;
+    transform: rotate(20deg);
+}
+
+/* Botones de acción */
+.action-buttons-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    z-index: 100;
+    /* Gradiente para ocultar los botones */
+    background: linear-gradient(to top, #121212, rgba(18, 18, 18, 0.8), rgba(18, 18, 18, 0));
+    padding-top: 50px;
+}
+.action-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, background-color 0.2s;
+}
+.action-button:hover:not(:disabled) {
+    transform: scale(1.1);
+}
+.action-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.action-button.nope {
+    background-color: #ef4444; /* Rojo */
+    color: white;
+}
+.action-button.like {
+    background-color: #10b981; /* Verde */
+    color: white;
+}
+/* Estilo para asegurar que los íconos de Ant Design sean grandes */
+.ant-btn > span {
+    font-size: 36px;
+}
