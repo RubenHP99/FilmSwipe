@@ -1,152 +1,128 @@
-import React, { useState, useEffect, useEffectEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Typography, Card, Space, Badge } from 'antd';
 import { UserOutlined, CrownOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
-import SwipeCard from './SwipeCard';
+import GenreSelection from './genreSelection';
 
-
-export default function WaitRoom({socket, usernames, isHost, roomId }) {
-
-  // Cargar lista inicial de jugadores
+export default function WaitRoom({ socket, usernames, isHost, roomId }) {
   const [players, setPlayers] = useState(usernames);
-
-  const [goMatchRoom, setGoMatchRoom] = useState(false);
-
+  const [goSelectGenresRoom, setGoSelectGenresRoom] = useState(false);
 
   useEffect(() => {
-    // Suscribirse al evento que envía el servidor para obtener la lista actualizada de jugadores
     socket.on('updatePlayerList', (currentPlayers) => {
-      console.log("Lista de jugadores actualizada:", currentPlayers);
-      setPlayers(currentPlayers); 
+      setPlayers(currentPlayers);
     });
 
-    // Suscripción del evento para comenzar la partida
-    socket.on('startGame', () => {
-      console.log("PARTIDA EMPEZADA");
-      setGoMatchRoom(true);
+    socket.on('selectGenres', () => {
+      setGoSelectGenresRoom(true);
     });
 
-    return () => { 
+    return () => {
       socket.off('updatePlayerList');
-      socket.off('startGame'); 
+      socket.off('selectGenres');
     };
-  }, []);
+  }, [socket]);
 
 
-  if(goMatchRoom) return(<SwipeCard/>)
-
-
+  if (goSelectGenresRoom) return (<GenreSelection socket={socket} />);
   
-  // 1. Construimos el dataSource dinámicamente basado en la cantidad de jugadores
-  // Agrupamos de 2 en 2 para mantener las 2 columnas pero sin filas vacías extra
-  const dataSource = [];
-  for (let i = 0; i < players.length; i += 2) {
-    dataSource.push({
-      key: i,
-      col1: players[i],              // Jugador N
-      col2: players[i + 1] || null,  // Jugador N+1 (o null si es impar)
-    });
-  }
 
-  // 2. Función para renderizar el contenido de cada celda
+  const dataSource = players.map((name, index) => ({
+    key: index,
+    name: name,
+  }));
+
+  // 1. Renderizado con justify-content center
   const renderPlayerCell = (playerName) => {
-    if (!playerName) return null; // Si no hay nombre, no renderizamos nada (quita el hueco)
-
     return (
-      <div style={{ padding: '8px 16px', minHeight: '45px', display: 'flex', alignItems: 'center' }}>
-        <Space size="middle">
+      <div style={{ 
+        padding: '4px 0', 
+        display: 'flex', 
+        justifyContent: 'center', // CENTRA EL CONTENIDO HORIZONTALMENTE
+        alignItems: 'center' 
+      }}>
+        <Space size="small">
           <UserOutlined style={{ fontSize: '18px', color: '#1890ff' }} />
           <Text strong style={{ fontSize: '16px' }}>{playerName}</Text>
-          {/* Marcamos al host (asumiendo que es el primero de la lista) */}
           {players[0] === playerName && (
-            <Badge 
-              count={<CrownOutlined style={{ color: '#faad14', fontSize: '16px' }} />} 
-              title="Anfitrión"
-            />
+            <CrownOutlined style={{ color: '#faad14', fontSize: '16px' }} />
           )}
         </Space>
       </div>
     );
   };
 
-  // 3. Configuración de columnas (sin títulos)
   const columns = [
     {
-      dataIndex: 'col1',
-      key: 'col1',
-      render: (text) => renderPlayerCell(text),
-    },
-    {
-      dataIndex: 'col2',
-      key: 'col2',
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center', // CENTRA LA CELDA EN LA TABLA
       render: (text) => renderPlayerCell(text),
     },
   ];
 
-
   return (
-    <div style={{ 
-      padding: '40px 20px', 
-      maxWidth: '700px', 
+    <div style={{
+      padding: '20px',
+      maxWidth: '500px',
       margin: '0 auto',
       minHeight: '100vh',
       display: 'flex',
-      alignItems: 'center' 
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
-      <Card 
-        hoverable 
+      <Card
+        hoverable
         style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
       >
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
           
-          {/* Cabecera de la Sala */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
             borderBottom: '1px solid #f0f0f0',
-            paddingBottom: '15px'
+            paddingBottom: '10px'
           }}>
             <Title level={3} style={{ margin: 0 }}>Sala de Espera</Title>
-            <Badge 
-              count={`${players.length} Jugadores`} 
-              style={{ backgroundColor: '#52c41a', padding: '0 10px' }} 
+            <Badge
+              count={`${players.length} Jugadores`}
+              style={{ backgroundColor: '#52c41a' }}
             />
           </div>
 
-          {/* Tabla de Jugadores dinámica */}
-          <Table 
-            dataSource={dataSource} 
-            columns={columns} 
-            pagination={false} 
-            showHeader={false} // Quita "Slot A / Slot B"
-            bordered={false}   // Quita bordes innecesarios
-            locale={{ emptyText: 'Esperando a que entren jugadores...' }}
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={false}
+            showHeader={false}
+            bordered={false}
+            size="small"
+            locale={{ emptyText: 'Esperando jugadores...' }}
+            style={{ width: '100%' }}
           />
 
-          {/* Botón de acción */}
-          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
             {isHost ? (
-              <Button 
-                type="primary" 
-                size="large" 
-                icon={<CrownOutlined />} 
-                onClick={() => socket.emit('startGame', { roomId })}
-                disabled={players.length < 2}
+              <Button
+                type="primary"
+                size="large"
+                icon={<CrownOutlined />}
+                onClick={() => socket.emit('selectGenres', { roomId })}
+                disabled={players.length < 1}
                 shape="round"
                 style={{ height: '50px', padding: '0 40px', fontSize: '18px' }}
               >
                 EMPEZAR PARTIDA
               </Button>
             ) : (
-              <div style={{ padding: '15px', background: '#f9f9f9', borderRadius: '8px' }}>
+              <div style={{ padding: '12px', background: '#f9f9f9', borderRadius: '8px' }}>
                 <Text italic type="secondary">
                   Esperando a que el anfitrión inicie la partida...
                 </Text>
               </div>
             )}
           </div>
-
         </Space>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import 'dotenv/config';
 
 
 const app = express();
@@ -72,9 +73,9 @@ io.on('connection', (socket) => {
     });
     
 
-    // Evento para que todos los jugadores cambien la pantalla y comience la eleccion de la pelicula
-    socket.on('startGame', (data) => {
-        io.to(data.roomId).emit('startGame');
+    // Evento para que todos los jugadores vayan a la pantalla de selección de géneros
+    socket.on('selectGenres', (data) => {
+        io.to(data.roomId).emit('selectGenres');
     });
 
 
@@ -84,5 +85,6 @@ io.on('connection', (socket) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
+const IP =process.env.VITE_SOCKETIO_SERVER_IP;
+const PORT = process.env.VITE_SOCKETIO_SERVER_PORT ||3000;
+server.listen(PORT, () => console.log(`🚀 Servidor corriendo en ${IP}:${PORT}`));

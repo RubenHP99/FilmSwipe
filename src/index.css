@@ -13,4 +13,5 @@
 :root {
   --gradient-color-1: #ff69b4;
   --gradient-color-2: #9370db;
+  --main-gradient: linear-gradient(90deg, var(--gradient-color-1), var(--gradient-color-2));
 }

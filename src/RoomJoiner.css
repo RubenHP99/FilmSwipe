@@ -20,15 +20,13 @@ html, body {
 
 /* Estilos del Logo */
 .app-logo-normal {
-    width: 20vw !important;
-    min-width: 120px; /* Evita que sea minúsculo en móvil */
+    width: 9rem !important;
+    min-width: 120px;
     height: auto;
+    margin-top: -10vh;
+    margin-bottom: 2vh;
 }
 
-.logoName {
-    margin-top: -20vh;
-    margin-bottom: -10vh;
-}
 
 /* ESTILOS DE LA TARJETA */
 .room-card {
@@ -42,54 +40,60 @@ html, body {
 .room-card .ant-card-body {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Espacio uniforme entre elementos internos */
+    gap:20px; /* Espacio uniforme entre elementos internos */
 }
 
 .room-card h2 {
     text-align: center;
     margin-bottom: -2vh;
+    margin-top: 0;
 }
+
+
 
 /* BOTÓN GRADIENTE */
-.gradient-button {
-    color: white !important; 
-    z-index: 1 !important;
-    position: relative !important;
-    border-radius: 24px !important; 
+.confirm-button {
+    /* Reseteo de estilos de Ant Design / Botón */
+    appearance: none;
     border: none !important;
-    height: 55px !important; 
+    outline: none !important;
+    
+    /* Dimensiones y Forma */
+    height: 55px !important;
+    padding: 0 30px !important; /* Ajusta según necesites */
+    border-radius: 24px !important;
+    width: fit-content !important;
+    
+    /* Fondo y Color */
+    background: linear-gradient(135deg, var(--gradient-color-1) 0%, var(--gradient-color-2) 100%) !important;
+    color: white !important;
+    
+    /* Tipografía */
+    font-size: x-large !important;
     font-weight: bold !important;
-    overflow: hidden !important;
-    background: transparent !important; 
     
-    display: inline-flex !important; /* Cambiado a inline-flex */
-    width: fit-content !important;    /* Se ajusta al texto */
-    align-self: center !important;   /* Centra el botón dentro de la card */
-    
+    /* Alineación */
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 10px;
-    cursor: pointer;
+    gap: 12px !important;
+    
+    /* Interactividad */
+    cursor: pointer !important;
+    transition: transform 0.2s ease, filter 0.2s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
 
-    font-size: x-large;
+    display: flex !important;
+    margin: auto !important;
 }
 
-.gradient-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, var(--gradient-color-1) 0%, var(--gradient-color-2) 100%) !important; 
-    z-index: -1; 
-    border-radius: 24px;
-    transition: opacity 0.3s ease;
+.confirm-button:hover {
+    filter: brightness(1.1) !important;
+    transform: scale(1.02) !important;
 }
 
-.gradient-button:hover {
-    filter: brightness(1.1);
-    color: white !important; /* Mantenemos blanco para que se lea bien con el rosa/morado */
+.confirm-button:active {
+    transform: scale(0.98) !important;
 }
 
 

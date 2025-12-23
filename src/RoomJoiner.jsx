@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Card, message, Space, Radio } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
 import './RoomJoiner.css';
 import WaitRoom from './WaitRoom';
 
@@ -43,14 +42,12 @@ export default function RoomJoiner({socket}) {
         <img src="/logo.png" alt="Logo de la aplicación" className="app-logo-normal" />
       </div>
 
-      <img src="/logoName.gif" alt="Logo de la aplicación" className="logoName"/>
-
       {/* 2. TARJETA: Elemento apilado debajo */}
       <Card 
         className="room-card"
       >
 
-        <Space direction="vertical" size="large" style={{ width: '100%' }}> 
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}> 
           <h2>Introducir nombre de usuario</h2>
           <Input
             placeholder="Nombre de usuario"
@@ -60,7 +57,7 @@ export default function RoomJoiner({socket}) {
           />
         </Space>
         
-        <Space direction="vertical" size="large" style={{ width: '100%' }}> 
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}> 
           <h2>Identificador de la sala</h2>
           <Input
             placeholder="ID de la sala"
@@ -75,19 +72,18 @@ export default function RoomJoiner({socket}) {
             display: 'flex', 
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '15px'               
           }}
           value={hostFlag}
           onChange={(e) => setHostFlag(e.target.value)}
           options={[
-            { value: true, label: <span style={{ fontSize: '1.5rem', fontWeight: "bold" }}>Crear una sala</span>},
-            { value: false, label: <span style={{ fontSize: '1.5rem', fontWeight: "bold" }}>Unirse a una sala</span>},
+            { value: true, label: <span style={{ fontSize: '1.3rem', fontWeight: "bold" }}>Crear una sala</span>},
+            { value: false, label: <span style={{ fontSize: '1.3rem', fontWeight: "bold" }}>Unirse a una sala</span>},
           ]}
         />
 
         <Button
           onClick={handleJoinRoom}
-          className="gradient-button"
+          className="confirm-button"
         >
           <img src='okIcon.png' width={"35vw"}/>
 
