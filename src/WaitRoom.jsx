@@ -24,7 +24,7 @@ export default function WaitRoom({ socket, usernames, isHost, roomId }) {
   }, [socket]);
 
 
-  if (goSelectGenresRoom) return (<GenreSelection socket={socket} />);
+  if (goSelectGenresRoom) return (<GenreSelection socket={socket} roomId={roomId} />);
   
 
   const dataSource = players.map((name, index) => ({

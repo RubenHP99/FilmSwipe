@@ -12,7 +12,7 @@ const genreIcons = {
     10752: "🪖", 37: "🌵",
 };
 
-export default function GenreSelection({ socket }) {
+export default function GenreSelection({ socket, roomId }) {
     const [genreList, setGenreList] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [goFilmMatchRoom, setGoFilmMatchRoom] = useState(false);
@@ -55,7 +55,7 @@ export default function GenreSelection({ socket }) {
         console.log("Géneros seleccionados:", selectedGenres);
     };
 
-    if(goFilmMatchRoom) return(<FilmSelection socket={socket} selectedGenres={selectedGenres}/>);
+    if(goFilmMatchRoom) return(<FilmSelection socket={socket} selectedGenres={selectedGenres} roomId={roomId}/>);
 
     return (
         <div className="genre-selection-container" style={{ padding: '40px 20px', textAlign: 'center' }}>

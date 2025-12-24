@@ -2,12 +2,28 @@ import React, { useEffect, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Card, Typography, Select } from 'antd';
 
-export default function FilmSelection({ socket, selectedGenres }) {
+export default function FilmSelection({ socket, selectedGenres, roomId }) {
     const [filmsList, setFilmsList] = useState([]);
     const [actualPage, setActualPage] = useState(1);
 
     // Filtro para ordenar las peliculas
     const [filter, setFilter] = useState("vote_count.desc");
+
+    // Estado para ir a la sala de match de peliculas
+    const [goFilmMatchRoom, setGoFilmMatchRoom] = useState(false);
+
+
+    useEffect(() => {
+        socket.on('filmMatched', (movieId) => {
+            // setGoFilmMatchRoom(true);
+            console.log("¡Película coincidente encontrada!", movieId);
+        });
+
+        return () => {
+            socket.off('filmMatched');
+        };
+    }, [socket]);
+
 
     function getFilmsResults(actualPage_, filter_) {
         const date = new Date();
@@ -33,7 +49,6 @@ export default function FilmSelection({ socket, selectedGenres }) {
     // Si hay menos de 2 peliculas en la lista, se cargan nuevas
     useEffect(() => {
         if (filmsList.length < 2){
-            console.log("POCAS");
             // Pasarlo a una variable local primero para incrementar la variable (ya que no se actualiza al momento)
             const updatedActualPage = actualPage + 1;
             getFilmsResults(updatedActualPage, filter);
@@ -41,11 +56,19 @@ export default function FilmSelection({ socket, selectedGenres }) {
         }
     }, [filmsList.length]);
 
+
     const onSwipe = (direction, movieTitle) => {
         console.log('Has deslizado: ' + direction + " " + movieTitle);
-        // Eliminamos la primera pelicula de la lista para que la siguiente suba
+        
+        if(direction === 'right'){
+            // Enviar la pelicula seleccionada al servidor
+            socket.emit('filmSelected', { movieId: filmsList[0].id, roomId: roomId });
+        }
+
+        // Eliminar la primera pelicula de la lista para que la siguiente suba
         setFilmsList(prev => prev.slice(1));
     };
+
 
     const onCardLeftScreen = (myIdentifier) => {
         console.log(myIdentifier + ' ha salido de la pantalla');
@@ -78,8 +101,8 @@ export default function FilmSelection({ socket, selectedGenres }) {
                 color: "white",
                 fontWeight: "bold",  
                 backgroundColor: "#1a1a1a",
-                // marginBottom: "10%",
-                // marginTop: "-20%"
+                marginBottom: "10%",
+                marginTop: "-20%"
             }}
 
 
@@ -114,7 +137,6 @@ export default function FilmSelection({ socket, selectedGenres }) {
             {/* CONTENEDOR DE LA PILA: Debe ser relativo y tener el tamaño de la carta */}
             <div style={{ position: 'relative', width: 300, height: 450 }}>
                 
-                {/* Mapear el array al revés para que la primera película quede arriba visualmente */}
                 {filmsList.map((film, index) => {
                     // Solo renderizamos las 3 o 4 primeras para no saturar el navegador
                     const actualIndex = filmsList.indexOf(film);
@@ -141,7 +163,8 @@ export default function FilmSelection({ socket, selectedGenres }) {
                                     boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                                     border: '1px solid #333',
                                     backgroundColor: '#1f1f1f',
-                                    userSelect: 'none' // Evita seleccionar texto al arrastrar
+                                    userSelect: 'none', // Evita seleccionar texto al arrastrar
+                                    marginBottom: '100%',
                                 }}
                             >
                                 <div style={{ textAlign: 'center', width: '100%' }}>

@@ -7,6 +7,8 @@ import 'dotenv/config';
 const app = express();
 const server = createServer(app);
 
+const likedFilmesByRoom = {};
+
 const io = new SocketIOServer(server, {
     cors: {
         origin: "*",
@@ -28,6 +30,7 @@ io.on('connection', (socket) => {
         if(hostFlag){
             if(!roomExists){
                 console.log(`El host ${username} está creando la sala: ${roomId}`);
+                likedFilmesByRoom[roomId] = {}; // Crear la sala vacía para guardar las peliculas gustadas por cada jugador
             }else{
                 return callback({
                     status: "ERROR",
@@ -47,6 +50,8 @@ io.on('connection', (socket) => {
             }
         }
 
+        // Inicializar la lista de peliculas gustadas por el usuario en la sala
+        likedFilmesByRoom[roomId][socket.id] = new Set();
 
         // Si entra aqui es host y la sala no existe o no es host y existe la sala
         socket.join(roomId);
@@ -55,12 +60,6 @@ io.on('connection', (socket) => {
 
         // Obtener información de una sala por ID
         const socketsID = Array.from(io.sockets.adapter.rooms.get(roomId));
-        // console.log(`***JUGADORES DE LA SALA ${roomId}***`);
-        // for (const id of socketsID) {
-        //     const socketData = io.sockets.sockets.get(id);
-        //     console.log("Socket username: ", socketData.username);
-        // }
-
         const currentPlayers = socketsID.map(id => {
             const socketData = io.sockets.sockets.get(id);
             return socketData?.username;
@@ -76,6 +75,28 @@ io.on('connection', (socket) => {
     // Evento para que todos los jugadores vayan a la pantalla de selección de géneros
     socket.on('selectGenres', (data) => {
         io.to(data.roomId).emit('selectGenres');
+    });
+
+    // Evento para recibir las peliculas gustadas por un usuario
+    socket.on('filmSelected', (data) => {
+
+        const { movieId, roomId } = data;
+
+        likedFilmesByRoom[roomId][socket.id].add(movieId);
+
+        const totalUsers = Object.keys(likedFilmesByRoom[roomId]).length;
+
+        let matchCount = 0;
+        for (const userSocketId in likedFilmesByRoom[roomId]) {
+            if (likedFilmesByRoom[roomId][userSocketId].has(movieId)) {
+                matchCount++;
+            }
+        }
+
+        if (matchCount === totalUsers) {
+            // Evento para notificar a TODOS los jugadores que ya se ha seleccionado una pelicula en común
+            io.to(data.roomId).emit('filmMatched', { movieId });
+        }
     });
 
 
