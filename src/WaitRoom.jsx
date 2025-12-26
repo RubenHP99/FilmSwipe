@@ -4,6 +4,7 @@ import { UserOutlined, CrownOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
 import GenreSelection from './genreSelection';
 
+
 export default function WaitRoom({ socket, usernames, isHost, roomId }) {
   const [players, setPlayers] = useState(usernames);
   const [goSelectGenresRoom, setGoSelectGenresRoom] = useState(false);
@@ -26,7 +27,6 @@ export default function WaitRoom({ socket, usernames, isHost, roomId }) {
 
   if (goSelectGenresRoom) return (<GenreSelection socket={socket} roomId={roomId} />);
   
-
   const dataSource = players.map((name, index) => ({
     key: index,
     name: name,
@@ -56,7 +56,7 @@ export default function WaitRoom({ socket, usernames, isHost, roomId }) {
     {
       dataIndex: 'name',
       key: 'name',
-      align: 'center', // CENTRA LA CELDA EN LA TABLA
+      align: 'center',
       render: (text) => renderPlayerCell(text),
     },
   ];
@@ -109,7 +109,7 @@ export default function WaitRoom({ socket, usernames, isHost, roomId }) {
                 size="large"
                 icon={<CrownOutlined />}
                 onClick={() => socket.emit('selectGenres', { roomId })}
-                disabled={players.length < 1}
+                disabled={players.length < 2}
                 shape="round"
                 style={{ height: '50px', padding: '0 40px', fontSize: '18px' }}
               >

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Card, Typography, Select } from 'antd';
+import FilmMatch from './FilmMatch';
 
 export default function FilmSelection({ socket, selectedGenres, roomId }) {
     const [filmsList, setFilmsList] = useState([]);
@@ -12,11 +13,15 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
     // Estado para ir a la sala de match de peliculas
     const [goFilmMatchRoom, setGoFilmMatchRoom] = useState(false);
 
+    // Id de la pelicula que ha hecho match
+    const [filmMatched, setFilmMatched] = useState("");
+
 
     useEffect(() => {
-        socket.on('filmMatched', (movieId) => {
-            // setGoFilmMatchRoom(true);
-            console.log("¡Película coincidente encontrada!", movieId);
+        socket.on('filmMatched', (data) => {
+            console.log("¡Película coincidente encontrada!", data.movieId);
+            setFilmMatched(data.movieId);
+            setGoFilmMatchRoom(true);
         });
 
         return () => {
@@ -46,9 +51,9 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
             .catch(err => console.error(err));
     }
 
-    // Si hay menos de 2 peliculas en la lista, se cargan nuevas
+    // Si hay menos de 3 peliculas en la lista, se cargan nuevas
     useEffect(() => {
-        if (filmsList.length < 2){
+        if (filmsList.length < 3){
             // Pasarlo a una variable local primero para incrementar la variable (ya que no se actualiza al momento)
             const updatedActualPage = actualPage + 1;
             getFilmsResults(updatedActualPage, filter);
@@ -70,16 +75,15 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
     };
 
 
-    const onCardLeftScreen = (myIdentifier) => {
-        console.log(myIdentifier + ' ha salido de la pantalla');
-    };
-
     // Cuando cambia el select, busca nuevas peliculas con la configuracion,
     // Se pasa por parametro porque el set no es inmediato
     const handleSelectChange = (value) => {
         setFilter(value);
         getFilmsResults(actualPage, value);
     };
+
+
+    if(goFilmMatchRoom) return(<FilmMatch movieId={filmMatched}/>);
 
 
     return (
@@ -146,9 +150,7 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
                         <TinderCard 
                             key={film.id} 
                             onSwipe={(dir) => onSwipe(dir, film.title)} 
-                            onCardLeftScreen={() => onCardLeftScreen(film.title)} 
                             preventSwipe={['up', 'down']}
-
                         >
                             <Card
                                 hoverable
