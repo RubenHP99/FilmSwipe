@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Typography, Card, Space, Badge } from 'antd';
 import { UserOutlined, CrownOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
-import GenreSelection from './genreSelection';
-
+import GenreSelection from './GenreSelection';
 
 export default function WaitRoom({ socket, usernames, isHost, roomId }) {
   const [players, setPlayers] = useState(usernames);
