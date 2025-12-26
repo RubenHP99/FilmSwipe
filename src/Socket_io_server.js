@@ -107,5 +107,6 @@ io.on('connection', (socket) => {
 
 
 const IP =process.env.VITE_SOCKETIO_SERVER_IP;
-const PORT = process.env.VITE_SOCKETIO_SERVER_PORT ||3000;
-server.listen(PORT, () => console.log(`🚀 Servidor corriendo en ${IP}:${PORT}`));
+// const PORT = process.env.VITE_SOCKETIO_SERVER_PORT ||3000;
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => console.log(`🚀 Servidor corriendo en ${IP}:${PORT}`));
