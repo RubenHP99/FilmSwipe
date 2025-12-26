@@ -4,7 +4,8 @@ import io from 'socket.io-client';
 import RoomJoiner from './RoomJoiner';
 
 
-const SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKETIO_SERVER_IP}:${import.meta.env.VITE_SOCKETIO_SERVER_PORT}`; 
+// const SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKETIO_SERVER_IP}:${import.meta.env.VITE_SOCKETIO_SERVER_PORT}`; 
+const SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKETIO_SERVER_IP}`; 
 
 function App() {
 
