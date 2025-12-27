@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Card, Typography, Select } from 'antd';
 import FilmMatch from './FilmMatch';
+import IconAnimationPop from './IconAnimationPop';
+
 
 export default function FilmSelection({ socket, selectedGenres, roomId }) {
     const [filmsList, setFilmsList] = useState([]);
@@ -15,6 +17,9 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
 
     // Id de la pelicula que ha hecho match
     const [filmMatched, setFilmMatched] = useState("");
+
+    // Estado para controlar la animacion de icono (el icono se fuarda tambien en este estado)
+    const [animationIcon, setAnimationIcon] = useState("");
 
 
     useEffect(() => {
@@ -66,12 +71,20 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
         console.log('Has deslizado: ' + direction + " " + movieTitle);
         
         if(direction === 'right'){
+            setAnimationIcon("💚");
+            setTimeout(() => setAnimationIcon(""), 500);
+
             // Enviar la pelicula seleccionada al servidor
             socket.emit('filmSelected', { movieId: filmsList[0].id, roomId: roomId });
         }
-
+        
+        if(direction === 'left'){
+            setAnimationIcon("❌");
+            setTimeout(() => setAnimationIcon(""), 500);
+        }
         // Eliminar la primera pelicula de la lista para que la siguiente suba
         setFilmsList(prev => prev.slice(1));
+
     };
 
 
@@ -95,6 +108,7 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
             height: '100vh',
             width: '100vw',
             overflow: 'hidden',
+            background: 'linear-gradient(90deg, #ff0000 0%, #ff0000 10%, #1a1a1a 20%, #1a1a1a 80%, #008000 90%, #008000 100%)'
         }}>
 
 
@@ -106,7 +120,7 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
                 fontWeight: "bold",  
                 backgroundColor: "#1a1a1a",
                 marginBottom: "10%",
-                marginTop: "-20%"
+                marginTop: "-30%"
             }}
 
 
@@ -137,12 +151,10 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
         />
 
 
-
-            {/* CONTENEDOR DE LA PILA: Debe ser relativo y tener el tamaño de la carta */}
             <div style={{ position: 'relative', width: 300, height: 450 }}>
                 
                 {filmsList.map((film, index) => {
-                    // Solo renderizamos las 3 o 4 primeras para no saturar el navegador
+                    // Renderizar las 3 primeras peliculas de la lista
                     const actualIndex = filmsList.indexOf(film);
                     if (actualIndex > 3) return null;
 
@@ -195,6 +207,9 @@ export default function FilmSelection({ socket, selectedGenres, roomId }) {
                     );
                 })}
             </div>
+
+            <IconAnimationPop icon={animationIcon} />
+
         </div>
     );
 }
